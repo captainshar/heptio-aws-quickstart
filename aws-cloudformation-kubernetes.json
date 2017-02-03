@@ -171,12 +171,6 @@
             "Value":"k8s-master"
           },
           {  
-            "Key":"Name",
-            "Value":{  
-              "Ref":"AWS::StackName"
-            }
-          },
-          {  
             "Key":"KubernetesCluster",
             "Value":{  
               "Ref":"AWS::StackName"
@@ -288,13 +282,6 @@
           {  
             "Key":"Name",
             "Value":"k8s-node",
-            "PropagateAtLaunch":"true"
-          },
-          {  
-            "Key":"Name",
-            "Value":{  
-            "Ref":"AWS::StackName"
-            },
             "PropagateAtLaunch":"true"
           },
           {  
