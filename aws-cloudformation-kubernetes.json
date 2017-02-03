@@ -292,8 +292,9 @@
           {  
             "Key":"Name",
             "Value":{  
-              "Ref":"AWS::StackName"
-            }
+            "Ref":"AWS::StackName"
+            },
+            "PropagateAtLaunch":"true"
           },
           {  
             "Key":"KubernetesCluster",
