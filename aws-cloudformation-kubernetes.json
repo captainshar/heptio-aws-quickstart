@@ -426,7 +426,7 @@
                 {  
                   "Effect":"Allow",
                   "Action":[  
-                    "ec2:Describe",
+                    "ec2:Describe*",
                     "ecr:GetAuthorizationToken",
                     "ecr:BatchCheckLayerAvailability",
                     "ecr:GetDownloadUrlForLayer",
