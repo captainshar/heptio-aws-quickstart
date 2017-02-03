@@ -74,6 +74,11 @@
       ],
       "ConstraintDescription":"must be a valid EC2 instance type."
     },
+    "AvailabilityZone":{  
+      "Description":"The Availability Zone for this cluster.  Generally, Heptio recommends that you run a cluster per AZ and use tooling to coordinate across AZs.",
+      "Type":"AWS::EC2::AvailabilityZone::Name",
+      "ConstraintDescription":"must be the name of an AWS Availability Zone"
+    },
     "SSHLocation":{  
       "Description":"IP address range that can be used to SSH to the EC2 instances",
       "Type":"String",
@@ -142,6 +147,9 @@
     "K8sMasterInstance":{  
       "Type":"AWS::EC2::Instance",
       "Properties":{  
+        "AvailabilityZone":{  
+          "Ref":"AvailabilityZone"
+        },
         "IamInstanceProfile":{  
           "Ref":"MasterInstanceProfile"
         },
@@ -161,6 +169,18 @@
           {  
             "Key":"Name",
             "Value":"k8s-master"
+          },
+          {  
+            "Key":"Name",
+            "Value":{  
+              "Ref":"AWS::StackName"
+            }
+          },
+          {  
+            "Key":"KubernetesCluster",
+            "Value":{  
+              "Ref":"AWS::StackName"
+            }
           }
         ],
         "UserData":{  
@@ -194,7 +214,7 @@
                   "Ref":"ClusterToken"
                 },
                 "\n",
-                "# Add-on for network Calico (http://docs.projectcalico.org/master/getting-started/kubernetes/installation/hosted/kubeadm/)\n",
+                "# Add-on for network Calico (http://docs.projectcalico.org/v2.0/getting-started/kubernetes/installation/hosted/kubeadm/)\n",
                 "# so pods can communicate\n",
                 "kubectl apply -f http://docs.projectcalico.org/v2.0/getting-started/kubernetes/installation/hosted/kubeadm/calico.yaml\n"
               ]
@@ -250,9 +270,11 @@
     "K8sNodeGroup":{  
       "Type":"AWS::AutoScaling::AutoScalingGroup",
       "Properties":{  
-        "AvailabilityZones":{  
-          "Fn::GetAZs":""
-        },
+        "AvailabilityZones":[  
+          {  
+            "Ref":"AvailabilityZone"
+          }
+        ],
         "DesiredCapacity":{  
           "Ref":"K8sNodeCapacity"
         },
@@ -265,6 +287,19 @@
           {  
             "Key":"Name",
             "Value":"k8s-node",
+            "PropagateAtLaunch":"true"
+          },
+          {  
+            "Key":"Name",
+            "Value":{  
+              "Ref":"AWS::StackName"
+            }
+          },
+          {  
+            "Key":"KubernetesCluster",
+            "Value":{  
+              "Ref":"AWS::StackName"
+            },
             "PropagateAtLaunch":"true"
           }
         ]
@@ -540,7 +575,7 @@
       }
     },
     "ClusterToken":{  
-      "Description":"Key that allows nodes to join this cluster; keep secret",
+      "Description":"Token that allows nodes to join this cluster; keep secret",
       "Value":{  
         "Ref":"ClusterToken"
       }
