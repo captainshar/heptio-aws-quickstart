@@ -394,6 +394,14 @@
               "Ref":"SSHLocation"
             }
           }
+        ],
+        "Tags":[
+          {
+            "Key":"KubernetesCluster",
+            "Value":{
+              "Ref":"AWS::StackName"
+            }
+          }
         ]
       }
     },
